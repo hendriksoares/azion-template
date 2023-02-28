@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { firstValueFrom, map } from 'rxjs';
 
 @Injectable()
-export class EdgeService {
+export class DomainService {
   url: string;
   token: string;
 
@@ -12,28 +12,24 @@ export class EdgeService {
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {
-    this.url = `${this.configService.get<string>(
-      'AZION_API_URL',
-    )}/edge_applications`;
+    this.url = `${this.configService.get<string>('AZION_API_URL')}/domains`;
     this.token = this.configService.get<string>('AZION_PERSONAL_TOKEN');
   }
 
-  async create(input: any): Promise<any> {
-    console.log('Creating a new edge application ...');
-    const { name, address, host_header } = input;
+  async create(input: any): Promise<void> {
+    console.log('Creating a new domain ...');
+
+    const { id, name } = input;
 
     const data = {
       name,
-      delivery_protocol: 'http',
-      origin_type: 'single_origin',
-      address,
-      origin_protocol_policy: 'preserve',
-      host_header,
-      browser_cache_settings: 'override',
-      browser_cache_settings_maximum_ttl: 20,
-      cdn_cache_settings: 'honor',
-      cdn_cache_settings_maximum_ttl: 60,
+      cnames: [],
+      cname_access_only: false,
+      digital_certificate_id: null,
+      edge_application_id: id,
+      is_active: true,
     };
+
     const config = {
       headers: {
         Accept: 'application/json; version=3',
