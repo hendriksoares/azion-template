@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom, map } from 'rxjs';
 
@@ -17,7 +17,7 @@ export class DomainService {
   }
 
   async create(input: any): Promise<void> {
-    console.log('Creating a new domain ...');
+    Logger.debug('Register a new domain', 'DomainService');
 
     const { id, name } = input;
 
